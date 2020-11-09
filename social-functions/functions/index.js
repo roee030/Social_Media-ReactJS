@@ -23,3 +23,26 @@ exports.getScreams = functions.https.onRequest((req, res) => {
     })
     .catch((e) => console.log(e));
 });
+exports.createScream = functions.https.onRequest((req, res) => {
+  if (req.method !== "POST") {
+    res.json({
+      message: `You trying to add Scream, HTTP Method are not allowed you need to use POST request`,
+    });
+  }
+  const newScream = {
+    body: req.body.body,
+    userHandle: req.body.userHandle,
+    creatAt: admin.firestore.Timestamp.fromDate(new Date()),
+  };
+  admin
+    .firestore()
+    .collection("screams")
+    .add(newScream)
+    .then((data) => {
+      res.json({ message: `document ${data.id} created successfully` });
+    })
+    .catch((e) => {
+      res.json({ message: `something went wrong when try to add new scream` });
+      console.log(e);
+    });
+});
