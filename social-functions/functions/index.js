@@ -1,38 +1,35 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
-// Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
+const express = require("express");
+const app = express();
 
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", { structuredData: true });
-//   response.send("Hello from Firebase!");
-// });
-
-exports.getScreams = functions.https.onRequest((req, res) => {
+app.get("/screams", (req, res) => {
   admin
     .firestore()
     .collection("screams")
+    .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
       let screams = [];
-      data.forEach((element) => {
-        screams.push(element.data());
+      data.forEach((doc) => {
+        screams.push({
+          screamId: doc.id,
+          body: doc.data().body,
+          userHandle: doc.data().userHandle,
+          createdAt: doc.data().creatAt,
+        });
       });
       return res.json(screams);
     })
     .catch((e) => console.log(e));
 });
-exports.createScream = functions.https.onRequest((req, res) => {
-  if (req.method !== "POST") {
-    res.json({
-      message: `You trying to add Scream, HTTP Method are not allowed you need to use POST request`,
-    });
-  }
+
+app.post("/screams", (req, res) => {
   const newScream = {
     body: req.body.body,
     userHandle: req.body.userHandle,
-    creatAt: admin.firestore.Timestamp.fromDate(new Date()),
+    creatAt: new Date().toISOString(),
   };
   admin
     .firestore()
@@ -46,3 +43,5 @@ exports.createScream = functions.https.onRequest((req, res) => {
       console.log(e);
     });
 });
+
+exports.api = functions.https.onRequest(app);
