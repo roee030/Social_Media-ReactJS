@@ -78,28 +78,28 @@ app.post("/signup", (req, res) => {
           .auth()
           .createUserWithEmailAndPassword(newUser.email, newUser.password);
       }
-    })
+    }) //user created and we have access to uesr id
     .then((data) => {
       userId = data.user.uid;
       return data.user.getIdToken();
     })
-    .then((idToken) => {
-      token = idToken;
-      const userCredentials = {
-        handle: newUser.handle,
-        email: newUser.email,
-        createdAt: new Date().toISOString(),
-        //TODO Append token to imageUrl. Work around just add token from image in storage.
-        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
-        userId,
-      };
-      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
-    })
-    .then(() => {
+    // .then((idToken) => {
+    //   token = idToken;
+    //   const userCredentials = {
+    //     handle: newUser.handle,
+    //     email: newUser.email,
+    //     createdAt: new Date().toISOString(),
+    //     //TODO Append token to imageUrl. Work around just add token from image in storage.
+    //     imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
+    //     userId,
+    //   };
+    //   return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+
+    // })
+    .then((token) => {
       return res.status(201).json({ token });
     })
     .catch((err) => {
-      console.error(err);
       if (err.code === "auth/email-already-in-use") {
         return res.status(400).json({ email: "Email is already is use" });
       } else {
