@@ -1,5 +1,6 @@
 const { admin, db } = require("./admin");
-moudle.exports = (req, res, next) => {
+
+module.exports = (req, res, next) => {
   let idToken;
   if (
     req.headers.authorization &&
@@ -23,8 +24,8 @@ moudle.exports = (req, res, next) => {
         .get();
     })
     .then((data) => {
-      //   req.user.handle = data.docs[0].data().handle;
-      //   req.user.imageUrl = data.docs[0].data().imageUrl;
+      req.user.handle = data.docs[0].data().handle;
+      req.user.imageUrl = data.docs[0].data().imageUrl;
       return next();
     })
     .catch((err) => {

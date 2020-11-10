@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 //Import Functions
-const FBAuth = require("./util/FBAuth");
+const FBAuth = require("./util/fbAuth");
 const cors = require("cors");
 app.use(cors());
 const {
