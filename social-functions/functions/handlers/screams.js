@@ -34,4 +34,3 @@ exports.postOneScream = (req, res) => {
       console.log(e);
     });
 };
-//create new user using firebase
