@@ -96,7 +96,20 @@ app.post("/signup", (req, res) => {
     //   return db.doc(`/users/${newUser.handle}`).set(userCredentials);
 
     // })
-    .then((token) => {
+    .then((idToken) => {
+      token = idToken;
+      const userCredentials = {
+        handle: newUser.handle,
+        email: newUser.email,
+        createdAt: new Date().toISOString(),
+        //TODO Append token to imageUrl. Work around just add token from image in storage.
+        // imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
+        // userId,
+      };
+      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+      //   return res.status(201).json({ token });
+    })
+    .then(() => {
       return res.status(201).json({ token });
     })
     .catch((err) => {
