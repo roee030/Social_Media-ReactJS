@@ -122,4 +122,25 @@ app.post("/signup", (req, res) => {
       }
     });
 });
+app.post("/login", (req, res) => {
+  const user = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  let errors = {};
+
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(user.email, user.password)
+    .then((data) => {
+      return data.getIdToken();
+    })
+    .then((token) => {
+      return res.json({ token });
+    })
+    .catch((e) => {
+      console.log(e);
+      return res.status(500).json({ error: e.code });
+    });
+});
 exports.api = functions.https.onRequest(app);
