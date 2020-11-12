@@ -11,9 +11,9 @@ exports.getAllScreams = (req, res) => {
           body: doc.data().body,
           userHandle: doc.data().userHandle,
           createdAt: doc.data().createdAt,
-          commentCount: doc.data().commentCount,
-          likeCount: doc.data().likeCount,
-          userImage: doc.data().userImage,
+          // commentCount: doc.data().commentCount,
+          // likeCount: doc.data().likeCount,
+          // userImage: doc.data().userImage,
         });
       });
       return res.json(screams);
@@ -32,12 +32,12 @@ exports.postOneScream = (req, res) => {
   const newScream = {
     body: req.body.body,
     userHandle: req.user.handle,
-    userImage: req.user.imageUrl,
+    // userImage: req.user.imageUrl,
     createdAt: new Date().toISOString(),
     likeCount: 0,
     commentCount: 0,
   };
-
+  console.log("scream", newScream);
   db.collection("screams")
     .add(newScream)
     .then((doc) => {
@@ -51,8 +51,8 @@ exports.postOneScream = (req, res) => {
     });
 };
 // Fetch one scream
+let screamData = {};
 exports.getScream = (req, res) => {
-  let screamData = {};
   db.doc(`/screams/${req.params.screamId}`)
     .get()
     .then((doc) => {
@@ -76,7 +76,7 @@ exports.getScream = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json({ error: err.code });
+      res.status(500).json({ error: "roee" + err.code });
     });
 };
 // Comment on a comment
