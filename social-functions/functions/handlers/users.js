@@ -72,6 +72,7 @@ exports.signup = (req, res) => {
         handle: newUser.handle,
         email: newUser.email,
         createdAt: new Date().toISOString(),
+        userId,
       };
       return db.doc(`/users/${newUser.handle}`).set(userCredentials);
       //   return res.status(201).json({ token });
